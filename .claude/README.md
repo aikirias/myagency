@@ -108,6 +108,7 @@ A **command** is what the user types: `/project:review-sql`, `/project:generate-
 - Team engineering principles
 - Naming, modeling, and data quality conventions
 - What is prohibited without explicit approval
+- Governance rules for how agents, skills, commands, and hooks should be authored and validated
 
 > Analogy: they are like the team's `CONTRIBUTING.md` or Architecture Decision Log, except Claude reads and applies them actively.
 
@@ -150,6 +151,8 @@ The command triggers the work, the skill structures it, the agent executes it wi
 | Expose that workflow as a slash command | `commands/review-dbt-schema.md` |
 | Add a team convention that should always apply | `rules/dbt-style-guide.md` |
 | Configure system permissions or hooks | `settings.json` |
+
+Use `make validate-claude` after changing the `.claude/` surface to catch missing metadata or malformed files early.
 
 ---
 

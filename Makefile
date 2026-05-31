@@ -1,4 +1,4 @@
-.PHONY: help install install-likec4 install-openspec install-understand-anything check-node
+.PHONY: help install install-likec4 install-openspec install-understand-anything check-node validate-claude
 
 SHELL := /bin/bash
 
@@ -62,3 +62,8 @@ install-understand-anything: ## Install Understand Anything as a Claude Code nat
 	@echo ""
 	@echo "Then run /understand to build the knowledge graph for this repo."
 	@echo "Docs: https://github.com/Lum1104/Understand-Anything"
+
+# ─── Claude surface validation ────────────────────────────────────────────────
+
+validate-claude: ## Validate agent, skill, command, and rule structure
+	python3 scripts/validate_claude_structure.py
