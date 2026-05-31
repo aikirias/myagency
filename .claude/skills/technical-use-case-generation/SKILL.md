@@ -16,6 +16,7 @@ When using this skill:
 3. Note dependencies, risks, observability needs, and rough effort.
 4. Keep each technical use case concrete enough to become one or more implementation tickets.
 5. If the specification is incomplete, state what is missing before inventing details.
+6. Use `.claude/rules/engineering-workflow.md` to decide whether the next handoff is proposal refinement, architecture design, or implementation planning.
 
 Output format:
 

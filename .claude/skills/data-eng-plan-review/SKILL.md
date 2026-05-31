@@ -23,6 +23,7 @@ For detailed standards, use:
 - `.claude/rules/data-engineering-principles.md`
 - `.claude/rules/analytical-modeling-guide.md`
 - `.claude/rules/data-quality-standards.md`
+- `.claude/rules/engineering-workflow.md`
 
 Output format:
 

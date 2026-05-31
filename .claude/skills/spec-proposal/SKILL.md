@@ -9,6 +9,7 @@ When using this skill:
 2. Confirm the stakeholder, business objective, and consumer.
 3. Create the spec directory at `openspec/specs/<kebab-name>/`.
 4. Generate the three files in order: `proposal.md` → `design.md` → `tasks.md`.
+5. Follow `.claude/rules/engineering-workflow.md` for when proposal work should hand off to architecture diagrams or implementation.
 
 Do not write implementation code during the proposal phase.
 
@@ -102,3 +103,4 @@ openspec/specs/<name>/
 For acceptance criteria format: `.claude/rules/requirements-standards.md`
 For pipeline design constraints: `.claude/rules/data-engineering-principles.md`
 For DRD structure: `.claude/rules/documentation-standards.md`
+For tool sequencing and handoffs: `.claude/rules/engineering-workflow.md`

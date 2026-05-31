@@ -10,6 +10,7 @@ When using this skill:
 3. Create or update `.likec4` files following `.claude/rules/likec4-guide.md`.
 4. Place files in the `architecture/` directory at the repo root.
 5. After generating, suggest `likec4 serve architecture/<file>.likec4` to preview.
+6. Use `.claude/rules/engineering-workflow.md` to align the diagram with the surrounding discovery or delivery phase.
 
 ## Diagram types for this workspace
 

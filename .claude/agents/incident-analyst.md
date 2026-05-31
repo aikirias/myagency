@@ -114,6 +114,7 @@ Hypothesis 2 [MEDIUM confidence]:
 - Document confirmed root cause, timeline, and contributing factors
 - Separate facts from inferences
 - List monitoring and process improvements with owners and due dates
+- If the incident exposes unfamiliar system behavior or structural gaps, route follow-up discovery and redesign through `.claude/rules/engineering-workflow.md`
 
 ## 💭 Your Communication Style
 

@@ -127,6 +127,8 @@ Useful slash commands:
 
 - Before changing code, inspect existing patterns.
 - Documentation first: before implementing a new integration, provider feature, external API, or unfamiliar tool, review the official documentation first and base the implementation on that source.
+- For unfamiliar codebases or non-trivial changes, follow the discovery and delivery sequence in `.claude/rules/engineering-workflow.md`.
+- Use Understand Anything for discovery, OpenSpec for non-trivial proposal work, LikeC4 for architecture expression, and Backstage for publication and operational visibility.
 - For risky changes, explain assumptions and impact.
 - Prefer review or checklist outputs before implementation.
 - When information is missing, state assumptions explicitly.
@@ -146,6 +148,7 @@ Useful slash commands:
 Use progressive disclosure. Read deeper docs only when the task needs them.
 
 - `.claude/rules/agent-system-governance.md`
+- `.claude/rules/engineering-workflow.md`
 - `.claude/rules/data-engineering-principles.md`
 - `.claude/rules/sql-style-guide.md`
 - `.claude/rules/orchestration-workflow-guide.md`

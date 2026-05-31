@@ -6,9 +6,10 @@ description: Uses Understand Anything to explore, map, and explain codebases, pi
 When using this skill:
 
 1. Identify the goal from the table below and route to the appropriate command.
-2. Confirm that Understand Anything is installed (`make install-understand-anything`).
+2. Confirm that Understand Anything is installed in Claude Code.
 3. If the knowledge graph has not been built yet, start with `/understand`.
 4. Interpret the output in the context of data engineering patterns.
+5. Use `.claude/rules/engineering-workflow.md` to decide whether the next step is proposal work, diagramming, implementation, or publication.
 
 ## Command routing
 
@@ -52,3 +53,4 @@ Use `/understand-chat` to ask:
 - Run `/understand` once after cloning the repo before using other commands.
 - Re-run `/understand` after major refactors to keep the knowledge graph current.
 - The `--auto-update` flag keeps the graph updated incrementally via git hooks.
+- This skill is usually the first step of the "existing system discovery" workflow.

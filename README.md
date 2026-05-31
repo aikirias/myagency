@@ -149,6 +149,46 @@ Architecture, discovery, and planning workflows:
 /project:assess-priority
 ```
 
+## End-to-end workflow
+
+The workspace treats `Understand Anything`, `OpenSpec`, `LikeC4`, and `Backstage` as a sequence, not as isolated tools.
+
+Tool roles:
+
+- `Understand Anything` -> discovery, codebase mapping, dependency analysis, impact exploration
+- `OpenSpec` -> proposal work before non-trivial implementation
+- `LikeC4` -> architecture expression and C4 diagrams
+- `Backstage` -> publication, ownership visibility, and operational documentation
+
+### Existing system discovery
+
+Use this when entering an unfamiliar codebase, legacy pipeline, or externally owned integration.
+
+1. Start with `/project:codebase-understanding`
+2. Summarize the current system, dependencies, and likely impact areas
+3. If a meaningful change is needed, create `/project:spec-proposal`
+4. If boundaries or integrations are non-trivial, create `/project:architecture-diagram`
+5. Publish or register the resulting knowledge in Backstage when it should become shared operational context
+
+### New capability delivery
+
+Use this when creating a new pipeline, dataset, integration, or structural change.
+
+1. Start from validated requirements or discovery
+2. Use `/project:spec-proposal` before implementation for non-trivial work
+3. Use `/project:architecture-diagram` to express the design
+4. Implement and review through the relevant Data Engineering skills and agents
+5. Publish the resulting component, ownership, and docs in Backstage when the work is ready to expose
+
+In practice:
+
+- do discovery before proposing implementation
+- do proposal work before coding non-trivial changes
+- do architecture diagrams before or alongside complex implementation
+- use Backstage after the design or delivery is stable enough to publish
+
+The detailed operational rule for this sequence lives in [.claude/rules/engineering-workflow.md](/home/akwiek/doc/claudio/data-eng-claude-workspace/.claude/rules/engineering-workflow.md:1).
+
 ## Project principles
 
 The workspace assumes these defaults:
@@ -298,4 +338,5 @@ Understand Anything is installed through Claude Code plugin commands, and its lo
 
 - [CLAUDE.md](/home/akwiek/doc/claudio/data-eng-claude-workspace/CLAUDE.md:1)
 - [.claude/README.md](/home/akwiek/doc/claudio/data-eng-claude-workspace/.claude/README.md:1)
+- [.claude/rules/engineering-workflow.md](/home/akwiek/doc/claudio/data-eng-claude-workspace/.claude/rules/engineering-workflow.md:1)
 - [local-stack/README.md](/home/akwiek/doc/claudio/data-eng-claude-workspace/local-stack/README.md:1)

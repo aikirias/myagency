@@ -129,6 +129,7 @@ Required controls:
 - What is being built or changed, and why?
 - What is the required SLA and operating model?
 - What is the target grain, key strategy, and time semantics?
+- If the system is unfamiliar or the change is non-trivial, follow `.claude/rules/engineering-workflow.md` before implementing
 
 ### Step 2: Choose the Implementation Pattern
 - Should this be batch, micro-batch, or streaming?

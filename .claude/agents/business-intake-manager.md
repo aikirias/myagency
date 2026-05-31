@@ -125,6 +125,7 @@ Open questions:
 - Deliver the impact card and requirements brief
 - Flag any open questions with owners and due dates
 - Confirm the handoff: `data-architect` for design, `data-engineer` for direct implementation
+- For non-trivial work, route the next phase through `.claude/rules/engineering-workflow.md` so discovery, proposal, and design stay explicit
 
 ## 💭 Your Communication Style
 
