@@ -1,0 +1,152 @@
+specification {
+  element actor
+  element system
+  element database
+  element pipeline
+  element tool
+}
+
+model {
+
+  // ── Actors ──────────────────────────────────────────────────────────────
+
+  actor analyst 'Data Analyst' {
+    description 'Queries curated and serving layer datasets via CloudBeaver or BI tools. Consumes db_data_model and db_business_model.'
+  }
+
+  actor data_engineer 'Data Engineer' {
+    description 'Builds, deploys, and monitors pipelines. Uses Airflow for scheduling, CloudBeaver for ad-hoc SQL, Backstage for catalog and ownership.'
+  }
+
+  // ── External systems ─────────────────────────────────────────────────────
+
+  system coingecko 'CoinGecko API' {
+    description 'Public REST API — no authentication required. Endpoint: GET /api/v3/simple/price. Free tier: ~30 req/min. No uptime SLA. Returns price snapshot (USD), market cap, 24h volume, and 24h % change per coin. Used as the only price data source for BTC and ETH pipelines.'
+  }
+
+  // ── Local Data Platform ──────────────────────────────────────────────────
+
+  system data_platform 'Local Data Platform' {
+    description 'Self-contained local data engineering stack. Airflow for batch orchestration, StarRocks (OLAP engine, MySQL protocol) for analytical storage across three medallion layers. All services run via Docker Compose.'
+
+    pipeline airflow 'Apache Airflow 3.2.1' {
+      description 'Batch orchestrator. UI: http://localhost:8080 (user: admin). Cron schedule: 0 6 * * * (daily at 06:00 UTC). Default task config: retries=3, retry_delay=5 min, execution_timeout=30 min, dagrun_timeout=1 h. Auth: SimpleAuthManager with auto-generated credentials. DAG folder: local-stack/airflow/dags/.'
+    }
+
+    pipeline dag_btc 'btc_price_daily' {
+      description 'Airflow DAG. Flow: fetch_and_load_btc_price → transform_to_model → validate_load. Calls CoinGecko with ids=bitcoin, upserts one row per price_date into db_stage.btc_price_daily (UNIQUE KEY — safe on retry), then casts DOUBLE to DECIMAL and loads db_data_model.fact_btc_daily_price. Fails loudly if validate_load finds 0 rows. catchup=False, max_active_runs=1.'
+    }
+
+    pipeline dag_eth 'eth_price_daily' {
+      description 'Airflow DAG. Flow: fetch_and_load_eth_price → transform_to_model → validate_load. Calls CoinGecko with ids=ethereum, upserts one row per price_date into db_stage.eth_price_daily (UNIQUE KEY — safe on retry), then casts DOUBLE to DECIMAL and loads db_data_model.fact_eth_daily_price. Fails loudly if validate_load finds 0 rows. catchup=False, max_active_runs=1.'
+    }
+
+    pipeline dq_checks 'Data Quality Checks' {
+      description 'SQL-based quality checks defined in local-stack/starrocks/migrations/03-eth-price-dq.sql. Four critical checks on fact_eth_daily_price (equivalent checks apply to BTC): (1) freshness — MAX(loaded_at) within last 26 h; (2) volume — COUNT >= 1 for latest price_date; (3) duplicates — no price_date with COUNT(price_date) > 1; (4) nulls — price_usd NULL count = 0. Each check returns PASS/FAIL with a detail string. severity: critical on all four.'
+    }
+
+    database db_stage 'db_stage — Bronze' {
+      description 'Raw landing zone. StarRocks OLAP engine, UNIQUE KEY tables partitioned by price_date. Preserves source field names and types (DOUBLE). No business logic applied. Tables: btc_price_daily, eth_price_daily, orders_raw. Idempotent upsert by price_date prevents duplicates on retry. Replication: 1 replica (local dev).'
+    }
+
+    database db_data_model 'db_data_model — Silver' {
+      description 'Curated model layer. Explicit DECIMAL types (price_usd DECIMAL(18,2), market_cap DECIMAL(24,2)), deduplicated by UNIQUE KEY(price_date). All fields renamed to business-friendly names. Tables: fact_btc_daily_price, fact_eth_daily_price, orders_curated. Safe for downstream consumption — no raw strings or implicit casts.'
+    }
+
+    database db_business_model 'db_business_model — Gold' {
+      description 'Serving layer. Business-facing aggregates and wide tables for BI and reporting consumption. Only consumes from db_data_model — never reads raw stage tables directly. Tables: daily_sales. Replication: 1 replica (local dev).'
+    }
+  }
+
+  // ── Local tooling ────────────────────────────────────────────────────────
+
+  tool cloudbeaver 'CloudBeaver' {
+    description 'Web-based SQL editor. UI: http://localhost:8978. Built on DBeaver. Connects to StarRocks via MySQL driver (host: starrocks, port: 9030, user: root, no password). Analysts and engineers use it to query db_stage, db_data_model, db_business_model, and db_report interactively. First-time setup requires creating a local admin user.'
+  }
+
+  tool backstage 'Backstage Developer Portal' {
+    description 'Internal developer portal. Frontend: http://localhost:3000, Backend API: http://localhost:7007. Catalogs platform components and ownership. Registered entities: System local-data-platform, Component btc-price-daily (pipeline/production), Component eth-price-daily (pipeline/production), Resource starrocks-db-stage (database), Resource starrocks-db-data-model (database). Bootstrapped from @backstage/create-app on first run.'
+  }
+
+  // ── Relationships ────────────────────────────────────────────────────────
+
+  // Source → pipeline
+  coingecko -> dag_btc 'GET /simple/price?ids=bitcoin (price, market_cap, vol, 24h_change)'
+  coingecko -> dag_eth 'GET /simple/price?ids=ethereum (price, market_cap, vol, 24h_change)'
+
+  // Orchestration
+  airflow -> dag_btc 'schedules and retries (cron: 0 6 * * *)'
+  airflow -> dag_eth 'schedules and retries (cron: 0 6 * * *)'
+
+  // Medallion flow — BTC
+  dag_btc -> db_stage 'upserts btc_price_daily (UNIQUE KEY on price_date)'
+  dag_btc -> db_data_model 'loads fact_btc_daily_price (DECIMAL casts + rename)'
+
+  // Medallion flow — ETH
+  dag_eth -> db_stage 'upserts eth_price_daily (UNIQUE KEY on price_date)'
+  dag_eth -> db_data_model 'loads fact_eth_daily_price (DECIMAL casts + rename)'
+
+  // Medallion continuation
+  db_stage -> db_data_model 'promoted by DAG transform step'
+  db_data_model -> db_business_model 'aggregated by serving pipeline'
+
+  // Data quality
+  dq_checks -> db_data_model 'runs freshness, volume, duplicate, and null checks'
+
+  // Consumption — analyst
+  analyst -> cloudbeaver 'writes and executes SQL'
+  cloudbeaver -> db_stage 'MySQL protocol port 9030'
+  cloudbeaver -> db_data_model 'MySQL protocol port 9030'
+  cloudbeaver -> db_business_model 'MySQL protocol port 9030'
+
+  // Consumption — engineer
+  data_engineer -> airflow 'monitors DAG runs, views task logs'
+  data_engineer -> cloudbeaver 'runs ad-hoc SQL and DQ checks'
+  data_engineer -> backstage 'browses pipeline catalog and ownership'
+}
+
+views {
+
+  view context {
+    title "Local Data Platform — Context (L1)"
+    include
+      analyst,
+      data_engineer,
+      coingecko,
+      data_platform,
+      cloudbeaver,
+      backstage
+  }
+
+  view containers {
+    title "Local Data Platform — Containers (L2)"
+    include
+      analyst,
+      data_engineer,
+      coingecko,
+      data_platform,
+      data_platform.airflow,
+      data_platform.dag_btc,
+      data_platform.dag_eth,
+      data_platform.dq_checks,
+      data_platform.db_stage,
+      data_platform.db_data_model,
+      data_platform.db_business_model,
+      cloudbeaver,
+      backstage
+  }
+
+  view medallion_flow {
+    title "Medallion Data Flow — Stage → Curated → Serving"
+    include
+      coingecko,
+      data_platform.dag_btc,
+      data_platform.dag_eth,
+      data_platform.dq_checks,
+      data_platform.db_stage,
+      data_platform.db_data_model,
+      data_platform.db_business_model,
+      analyst,
+      cloudbeaver
+  }
+}

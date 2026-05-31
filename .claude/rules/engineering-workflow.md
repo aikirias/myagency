@@ -43,24 +43,44 @@ Use this flow when creating a new pipeline, integration, data product, or struct
 1. Start from requirements or discovery.
 2. Use `OpenSpec` before implementation for non-trivial work.
    - capture problem, scope, success criteria, trade-offs, and open questions
-3. Use `LikeC4` to express the design.
-   - context, containers, components, and flow where appropriate
+3. **[BLOCKING GATE]** Use `LikeC4` to produce the architecture diagram before implementation starts.
+   - The Data Architect must create or update the `.likec4` file in `architecture/`
+   - The diagram file path is a required input for the Data Engineer — implementation does not start without it
+   - Minimum: L1 context + L2 container views covering the new or changed pipeline
 4. Implement through the relevant agents, skills, and commands.
+   - The Data Engineer receives the `.likec4` file path as part of the handoff context
+   - If implementation changes pipeline topology, components, or data flows, the Data Engineer must update the `.likec4` file before the task is complete
 5. Use `Backstage` to publish the resulting component, docs, ownership, and operational links when the work is ready to expose.
+   - Update `catalog-info.yaml` for every new or changed element in the diagram
+   - Every external API consumed by the pipeline must appear as `kind: API` in the catalog
+   - Every pipeline must declare `consumesApis` and `dependsOn`
+   - Copy updated `catalog-info.yaml` to the Backstage container and trigger a catalog refresh
+   - Verify that all new entities appear in the Backstage catalog before closing the task
 
 Expected outputs:
 
 - accepted or reviewable proposal
-- architecture diagrams
+- `.likec4` architecture diagram file (required before step 4), passing the completeness checklist in `.claude/rules/likec4-guide.md`
 - implementation tasks
-- published component or documentation surface when applicable
+- updated `.likec4` file if topology changed during implementation
+- updated `catalog-info.yaml` synced to Backstage with all entities verified
+
+## Architecture diagram handoff contract
+
+When the Data Architect hands off to the Data Engineer, the handoff must include:
+
+- path to the `.likec4` file covering the new or changed pipeline
+- DDL or schema artifacts
+- any open design decisions that affect implementation
+
+When the Data Engineer completes work, the architecture documentation must reflect the actual implemented state. If any component, relationship, or data flow changed during implementation, the `.likec4` file is updated as part of the same delivery — not deferred.
 
 ## Routing guidance
 
 - Use `codebase-understanding` first when the system is unfamiliar.
 - Use `spec-proposal` before non-trivial implementation.
-- Use `architecture-diagram` when design boundaries or integrations need to be visible.
-- Use implementation and review skills only after the intended pattern is clear enough to execute safely.
+- Use `architecture-diagram` to produce the `.likec4` file before handing off to the Data Engineer — this is mandatory for new pipelines and structural changes, not optional.
+- Use implementation and review skills only after the intended pattern is clear enough to execute safely and the architecture diagram exists.
 
 ## Decision rules
 

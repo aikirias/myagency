@@ -4,12 +4,13 @@
 
 | Change | Required documentation |
 |---|---|
-| New pipeline | DRD before implementation, runbook before go-live |
-| Significant architecture change | ADR |
+| New pipeline | DRD before implementation, runbook before go-live, architecture diagram + Backstage sync |
+| Significant architecture change | ADR + updated architecture diagram + Backstage sync |
+| New external data source | Register as `kind: API` in `catalog-info.yaml` + update diagram |
 | Recurring operational task | Runbook |
 | New or changed work item | Technical ticket / Plane issue with acceptance criteria |
 | Production incident | RCA within 3 business days |
-| Decommissioning a table | Migration notice + updated downstream documentation |
+| Decommissioning a table | Migration notice + updated downstream documentation + updated diagram + Backstage sync |
 
 ## ADR (Architecture Decision Record)
 
@@ -64,6 +65,41 @@ Required fields:
 - Dependencies: what blocks this, what this blocks
 
 Acceptance criteria must be specific: "Row count for fact_orders matches source within 0.1%" not "Pipeline works correctly."
+
+## Architecture diagrams
+
+Every production pipeline and system integration must have a LikeC4 diagram. A diagram is not complete until it meets all of the following:
+
+### Element completeness
+Every diagram must include all of the following when they exist in the system:
+- All actors (consumers, operators)
+- All external systems and APIs the platform calls — including third-party REST APIs
+- All orchestration components
+- All storage layers (every tier of the medallion)
+- All data quality components
+- All developer and analyst tooling (SQL editors, developer portals)
+
+Missing any of these from a diagram is a documentation defect.
+
+### Description quality
+- Every element must have a rich description. See `.claude/rules/likec4-guide.md` for required content per element type.
+- One-liner descriptions on pipelines, databases, or external systems are not acceptable.
+- Every relationship must carry a label that names what flows and how.
+
+### Required views
+Every diagram must have at minimum:
+- L1 Context view
+- L2 Containers view
+- One domain flow view (medallion, pipeline, or integration)
+
+### Backstage catalog sync
+Every diagram change requires updating `catalog-info.yaml`:
+- External APIs → `kind: API` with `spec.type: rest` (or graphql/grpc) and an inline OpenAPI definition
+- Pipelines → `kind: Component` with `spec.type: pipeline`, `consumesApis`, and `dependsOn`
+- Storage layers → `kind: Resource` with `spec.type: database`
+- Tools → `kind: Resource` with `spec.type: tool`
+
+The catalog is not updated until the new entities are verified in Backstage. Updating the file without verifying indexing is not complete.
 
 ## Writing tone
 

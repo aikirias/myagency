@@ -23,6 +23,12 @@ These rules apply to the `.claude/` surface itself: agents, skills, commands, ho
 - Use commands as entry points, not as the place where workflow logic lives.
 - Use rules for standards that should apply regardless of task entry point.
 
+## Architecture diagram handoff rule
+
+The Data Architect → Data Engineer handoff requires a `.likec4` file in `architecture/` as a blocking deliverable. Implementation does not start without it.
+
+When the Data Engineer completes a task that changed pipeline topology, the `.likec4` file must be updated before the task is closed. This applies to all agents that produce or modify pipeline structure: Data Architect, Data Engineer. The `data-pr-review` skill enforces this at merge time.
+
 ## Change management
 
 - Prefer additive changes over large reorganizations of the `.claude/` surface.

@@ -1,0 +1,144 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: local-data-platform
+  description: Local data engineering stack — Apache Airflow 3.2.1 + StarRocks 3.3.5. Batch pipelines for BTC/ETH daily price ingestion from CoinGecko. Three-layer medallion architecture (Bronze/Silver/Gold). CloudBeaver as SQL editor, Backstage as developer portal.
+spec:
+  owner: data-engineering
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: coingecko-price-api
+  description: "CoinGecko public REST API. Endpoint: GET /api/v3/simple/price?ids={coin}&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true. No authentication required. Free tier: ~30 req/min. No uptime SLA. Returns price (USD), market cap, 24h volume, and 24h % change per coin. Used as the only price data source for BTC and ETH pipelines."
+spec:
+  type: rest
+  lifecycle: production
+  owner: data-engineering
+  system: local-data-platform
+  definition: |
+    openapi: "3.0.0"
+    info:
+      title: CoinGecko Simple Price API
+      version: "v3"
+    paths:
+      /api/v3/simple/price:
+        get:
+          summary: Get current price for one or more coins
+          parameters:
+            - name: ids
+              in: query
+              required: true
+              schema:
+                type: string
+              example: "bitcoin,ethereum"
+            - name: vs_currencies
+              in: query
+              required: true
+              schema:
+                type: string
+              example: "usd"
+            - name: include_market_cap
+              in: query
+              schema:
+                type: boolean
+            - name: include_24hr_vol
+              in: query
+              schema:
+                type: boolean
+            - name: include_24hr_change
+              in: query
+              schema:
+                type: boolean
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: btc-price-daily
+  description: "Daily BTC/USD price ingestion from CoinGecko. Flow: fetch_and_load → transform_to_model → validate_load. Upserts raw snapshot into db_stage.btc_price_daily (UNIQUE KEY on price_date), casts DOUBLE to DECIMAL, loads db_data_model.fact_btc_daily_price. Schedule: 0 6 * * * UTC. Retries: 3. catchup=False."
+  annotations:
+    backstage.io/source-location: url:https://github.com/local/data-eng-claude-workspace/blob/main/local-stack/airflow/dags/btc_price_daily.py
+spec:
+  type: pipeline
+  lifecycle: production
+  owner: data-engineering
+  system: local-data-platform
+  consumesApis:
+    - coingecko-price-api
+  dependsOn:
+    - resource:starrocks-db-stage
+    - resource:starrocks-db-data-model
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: eth-price-daily
+  description: "Daily ETH/USD price ingestion from CoinGecko. Flow: fetch_and_load → transform_to_model → validate_load. Upserts raw snapshot into db_stage.eth_price_daily (UNIQUE KEY on price_date), casts DOUBLE to DECIMAL, loads db_data_model.fact_eth_daily_price. Schedule: 0 6 * * * UTC. Retries: 3. catchup=False."
+  annotations:
+    backstage.io/source-location: url:https://github.com/local/data-eng-claude-workspace/blob/main/local-stack/airflow/dags/eth_price_daily.py
+spec:
+  type: pipeline
+  lifecycle: production
+  owner: data-engineering
+  system: local-data-platform
+  consumesApis:
+    - coingecko-price-api
+  dependsOn:
+    - resource:starrocks-db-stage
+    - resource:starrocks-db-data-model
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: crypto-price-dq-checks
+  description: "SQL data quality checks for crypto price fact tables. Four critical checks per dataset: freshness (MAX(loaded_at) within 26 h), volume (COUNT >= 1 for latest price_date), duplicates (no price_date with COUNT > 1), nulls (price_usd NULL = 0). Defined in local-stack/starrocks/migrations/03-eth-price-dq.sql."
+  annotations:
+    backstage.io/source-location: url:https://github.com/local/data-eng-claude-workspace/blob/main/local-stack/starrocks/migrations/03-eth-price-dq.sql
+spec:
+  type: data-quality
+  lifecycle: production
+  owner: data-engineering
+  system: local-data-platform
+  dependsOn:
+    - resource:starrocks-db-data-model
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: starrocks-db-stage
+  description: "StarRocks db_stage (Bronze) — raw landing zone. UNIQUE KEY tables, DOUBLE types, source field names preserved. Tables: btc_price_daily, eth_price_daily, orders_raw. MySQL protocol port 9030."
+spec:
+  type: database
+  owner: data-engineering
+  system: local-data-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: starrocks-db-data-model
+  description: "StarRocks db_data_model (Silver) — curated model layer. Explicit DECIMAL types, UNIQUE KEY deduplication. Tables: fact_btc_daily_price, fact_eth_daily_price, orders_curated. Consumer-safe: no raw strings. MySQL protocol port 9030."
+spec:
+  type: database
+  owner: data-engineering
+  system: local-data-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: starrocks-db-business-model
+  description: "StarRocks db_business_model (Gold) — serving layer. Business-facing aggregates for BI consumption. Only consumes from db_data_model. Tables: daily_sales. MySQL protocol port 9030."
+spec:
+  type: database
+  owner: data-engineering
+  system: local-data-platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: cloudbeaver
+  description: "Web SQL editor for StarRocks. UI: http://localhost:8978. MySQL driver (host: starrocks, port: 9030, user: root). Used by analysts and engineers to query all databases interactively."
+spec:
+  type: tool
+  owner: data-engineering
+  system: local-data-platform

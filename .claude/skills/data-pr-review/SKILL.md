@@ -21,6 +21,8 @@ Focus on:
 - destructive schema changes
 - missing retries, timeouts, alerts, or data quality coverage
 - undocumented rollout or rollback expectations
+- **architecture diagram currency**: if the PR adds, removes, or changes a pipeline component, data flow, layer assignment, or system relationship, verify that the corresponding `architecture/*.likec4` file was updated. A PR that changes pipeline topology without updating the diagram is not merge-ready.
+- **DQ two-layer completeness**: if the PR introduces a new dataset or pipeline, verify that both Layer 1 (SQL check definitions in `migrations/`) and Layer 2 (automated executor DAG or tasks) are present. A new pipeline with only SQL checks and no executor is not merge-ready.
 
 For detailed standards, use:
 
@@ -45,4 +47,18 @@ Output format:
 
 ### Suggestions
 - [...]
+
+### Architecture diagram and Backstage sync
+- [ ] Topology unchanged — no diagram or catalog update needed
+- [ ] Topology changed — `architecture/<file>.likec4` updated and passes completeness checklist
+- [ ] Topology changed — `catalog-info.yaml` updated to match diagram changes
+- [ ] New external API added — registered as `kind: API` in `catalog-info.yaml` (BLOCKER if missing)
+- [ ] Topology changed — diagram or catalog update missing (BLOCKER)
+
+### Data quality coverage
+- [ ] No new dataset or pipeline introduced — no DQ check required
+- [ ] New dataset/pipeline — Layer 1 present: SQL check definitions in `migrations/<xx>-<dataset>-dq.sql`
+- [ ] New dataset/pipeline — Layer 2 present: automated executor DAG or tasks in `airflow/dags/`
+- [ ] Layer 1 present but Layer 2 missing (BLOCKER)
+- [ ] Execution spec documented (pattern, schedule, failure behavior, result log)
 ```

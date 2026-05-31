@@ -90,12 +90,19 @@ openspec/specs/<name>/
 # Tasks: <title>
 
 - [ ] Create source schema documentation
+- [ ] Data Architect: produce architecture diagram — create/update `architecture/<file>.likec4` (L1 + L2 views)
+- [ ] Data Architect: hand off diagram file path + DDL to Data Engineer before implementation starts
 - [ ] Implement staging pipeline
 - [ ] Implement transformation
-- [ ] Write data quality checks (freshness, volume, duplicates, nulls)
+- [ ] Data Engineer: update `architecture/<file>.likec4` if pipeline topology changed during implementation
+- [ ] Data Quality Engineer: Layer 1 — write SQL check definitions (freshness, volume, duplicates, nulls) in `migrations/<xx>-<dataset>-dq.sql`
+- [ ] Data Quality Engineer: Layer 2 — produce automated executor (Airflow DAG or tasks appended to load DAG)
+- [ ] Data Quality Engineer: document execution spec (pattern, schedule, failure behavior, result log)
+- [ ] Verify check results write to `db_report.pipeline_run_log`
 - [ ] Create runbook
 - [ ] Notify downstream consumers
-- [ ] Deploy and validate
+- [ ] Deploy and validate (trigger load DAG + DQ executor, confirm results in log)
+- [ ] Publish component and updated diagram to Backstage
 ```
 
 ## References
