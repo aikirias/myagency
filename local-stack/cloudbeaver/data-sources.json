@@ -1,0 +1,24 @@
+{
+  "folders": {},
+  "connections": {
+    "mysql8-starrocks-local": {
+      "provider": "mysql",
+      "driver": "mysql8",
+      "name": "StarRocks Local",
+      "user": "dbeaver",
+      "save-password": true,
+      "show-system-objects": true,
+      "read-only": false,
+      "configuration": {
+        "host": "starrocks",
+        "port": "9030",
+        "database": "db_stage",
+        "url": "jdbc:mysql://starrocks:9030/db_stage",
+        "configurationType": "MANUAL",
+        "type": "dev",
+        "closeIdleConnection": true,
+        "auth-model": "native"
+      }
+    }
+  }
+}

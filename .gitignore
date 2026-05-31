@@ -1,0 +1,16 @@
+CLAUDE.local.md
+.claude/settings.local.json
+.mcp.json
+.env
+*.env
+.env.*
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.log
+.venv/
+venv/
+node_modules/
+.understand-anything/intermediate/
+.understand-anything/diff-overlay.json

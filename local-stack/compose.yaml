@@ -1,0 +1,126 @@
+services:
+  airflow:
+    build:
+      context: ./airflow
+    container_name: local-airflow
+    restart: unless-stopped
+    depends_on:
+      starrocks-fe:
+        condition: service_healthy
+      starrocks-be:
+        condition: service_healthy
+    environment:
+      AIRFLOW_HOME: /opt/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      _AIRFLOW_WWW_USER_USERNAME: airflow
+      _AIRFLOW_WWW_USER_PASSWORD: airflow
+      AIRFLOW_CONN_STARROCKS_LOCAL: mysql://root@starrocks:9030/db_stage
+    command: standalone
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - airflow_logs:/opt/airflow/logs
+      - airflow_home:/opt/airflow
+
+  starrocks-fe:
+    image: starrocks/fe-ubuntu:3.3.5
+    container_name: local-starrocks-fe
+    hostname: starrocks-fe
+    user: root
+    restart: unless-stopped
+    command: |
+      bash /opt/starrocks/fe/bin/start_fe.sh --host_type FQDN
+    ports:
+      - "8030:8030"
+      - "9030:9030"
+    volumes:
+      - starrocks_fe_meta:/opt/starrocks/fe/meta
+      - starrocks_fe_log:/opt/starrocks/fe/log
+    networks:
+      default:
+        aliases:
+          - starrocks
+    healthcheck:
+      test: 'mysql -u root -h 127.0.0.1 -P 9030 -e "SHOW FRONTENDS\\G" | grep "Alive: true"'
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  starrocks-be:
+    image: starrocks/be-ubuntu:3.3.5
+    container_name: local-starrocks-be
+    hostname: starrocks-be
+    user: root
+    restart: unless-stopped
+    depends_on:
+      starrocks-fe:
+        condition: service_healthy
+    command:
+      - /bin/bash
+      - -lc
+      - |
+        ulimit -n 65535
+        echo "block_cache_enable = true" >> /opt/starrocks/be/conf/be.conf
+        echo "block_cache_mem_size = 536870912" >> /opt/starrocks/be/conf/be.conf
+        echo "block_cache_disk_size = 1073741824" >> /opt/starrocks/be/conf/be.conf
+        sleep 15
+        mysql --connect-timeout 2 -h starrocks-fe -P 9030 -u root -e "ALTER SYSTEM ADD BACKEND \"starrocks-be:9050\";" || true
+        exec bash /opt/starrocks/be/bin/start_be.sh
+    environment:
+      HOST_TYPE: FQDN
+    ports:
+      - "8040:8040"
+    volumes:
+      - starrocks_be_storage:/opt/starrocks/be/storage
+      - starrocks_be_log:/opt/starrocks/be/log
+    healthcheck:
+      test: 'mysql -u root -h starrocks-fe -P 9030 -e "SHOW BACKENDS\\G" | grep "Alive: true"'
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  sql-editor:
+    image: dbeaver/cloudbeaver:latest
+    container_name: local-sql-editor
+    restart: unless-stopped
+    depends_on:
+      starrocks-fe:
+        condition: service_healthy
+      starrocks-be:
+        condition: service_healthy
+    ports:
+      - "8978:8978"
+    volumes:
+      - cloudbeaver_workspace:/opt/cloudbeaver/workspace
+
+  backstage:
+    build:
+      context: ./backstage
+    container_name: local-backstage
+    restart: unless-stopped
+    environment:
+      HOST: 0.0.0.0
+      NODE_ENV: development
+      NODE_OPTIONS: --no-node-snapshot
+      BACKSTAGE_APP_DIR: /workspace/local-backstage
+      BACKSTAGE_APP_NAME: local-backstage
+      APP_CONFIG_app_listen_host: 0.0.0.0
+      APP_CONFIG_backend_listen_host: 0.0.0.0
+      APP_CONFIG_backend_listen_port: "7007"
+    ports:
+      - "3000:3000"
+      - "7007:7007"
+    volumes:
+      - backstage_workspace:/workspace
+
+volumes:
+  airflow_home:
+  airflow_logs:
+  backstage_workspace:
+  cloudbeaver_workspace:
+  starrocks_be_log:
+  starrocks_be_storage:
+  starrocks_fe_log:
+  starrocks_fe_meta:
