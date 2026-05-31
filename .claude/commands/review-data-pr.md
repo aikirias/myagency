@@ -24,3 +24,4 @@ If the target environment is not specified, assume prod and apply the strictest 
 - A PR with DDL breaking changes and no migration plan is a BLOCKER
 - Do not flag code style issues as blockers — only data correctness and operational risk qualify
 - If the PR description is absent, flag it as a WARNING (not BLOCKER) and proceed with the review
+- For commit and PR authoring conventions, see `.claude/rules/git-and-pr-conventions.md`

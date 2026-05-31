@@ -135,6 +135,7 @@ Useful slash commands:
 - When information is missing, state assumptions explicitly.
 - For implementation tasks, validate the full intended workflow before considering the task complete, but keep validation proportional to risk and safety constraints.
 - If full validation would require destructive actions, production intervention, approval-gated access, or could affect live systems, stop at the safe boundary and state exactly what remains unverified and why.
+- When preparing commits or PRs, follow `.claude/rules/git-and-pr-conventions.md`.
 - **Agent and skill routing is mandatory**: before executing any Data Engineering task, identify which agents (`.claude/agents/`) and skills (`.claude/skills/`) apply. Route each track to the appropriate specialist — do not generate SQL, DDL, backfill plans, data quality checks, or technical documentation directly when a skill or agent covers it. If multiple tracks are involved (e.g., design + backfill + data quality), spawn the corresponding agents in parallel.
 
 ## Architecture Notes
@@ -151,6 +152,7 @@ Use progressive disclosure. Read deeper docs only when the task needs them.
 
 - `.claude/rules/agent-system-governance.md`
 - `.claude/rules/engineering-workflow.md`
+- `.claude/rules/git-and-pr-conventions.md`
 - `.claude/rules/data-engineering-principles.md`
 - `.claude/rules/sql-style-guide.md`
 - `.claude/rules/orchestration-workflow-guide.md`

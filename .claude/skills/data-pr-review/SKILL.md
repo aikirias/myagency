@@ -27,6 +27,7 @@ For detailed standards, use:
 - `.claude/rules/sql-style-guide.md`
 - `.claude/rules/orchestration-workflow-guide.md`
 - `.claude/rules/data-quality-standards.md`
+- `.claude/rules/git-and-pr-conventions.md`
 
 Output format:
 
