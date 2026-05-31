@@ -7,14 +7,14 @@ This file is operational guidance for Claude Code, not general project documenta
 
 Reusable workspace for Data Engineering teams using Claude Code with:
 
-- Airflow orchestration
-- StarRocks as the primary analytical database
+- workflow orchestration
+- analytical storage and serving layers
 - Python for workflow automation
 - SQL for transformations, modeling, and data quality
 - Batch and near-real-time pipeline workflows
-- LikeC4 for architecture-as-code diagrams
-- OpenSpec for spec-driven development proposals
-- Understand Anything for codebase exploration and impact analysis
+- architecture-as-code diagrams
+- spec-driven development proposals
+- codebase exploration and impact analysis
 
 Primary goals:
 
@@ -35,10 +35,9 @@ Primary goals:
 
 - `claude` from the repo root -> load this workspace with `.claude/` config
 - `cp .env.example .env` -> create local credentials and MCP config
-- `make install` -> install LikeC4, OpenSpec, and Understand Anything
-- `cd local-stack && docker compose up -d --build` -> start local Airflow + StarRocks + CloudBeaver + Backstage
-- `cd local-stack && ./bootstrap-starrocks.sh` -> create demo StarRocks schemas and tables
-- `cd local-stack && docker compose logs -f airflow` -> inspect Airflow locally
+- `make install` -> install the repo's optional local tooling
+- `cd local-stack && docker compose up -d --build` -> start the local data platform stack
+- `cd local-stack && docker compose logs -f <service>` -> inspect local services
 - `cd local-stack && docker compose down` -> stop the local stack
 
 Useful slash commands:
@@ -60,8 +59,7 @@ Useful slash commands:
 - `.claude/commands/` -> `/project:*` entry points
 - `.claude/rules/` -> persistent engineering standards
 - `.claude/hooks/` -> validation and safety hooks
-- `examples/` -> sample SQL, workflow, incident, and ticket inputs
-- `local-stack/` -> local Airflow + StarRocks + Backstage environment
+- `local-stack/` -> local data platform environment for end-to-end testing
 
 ## Rules
 
@@ -72,7 +70,7 @@ Useful slash commands:
 - Always explicitly name columns.
 - Prefer CTEs over deeply nested subqueries.
 - Avoid vendor-specific SQL unless the task requires it.
-- Use StarRocks-specific syntax only when it provides a clear performance or modeling benefit.
+- Use platform-specific SQL only when it provides a clear performance or modeling benefit.
 - Filter partitions when querying large partitioned tables.
 - Avoid `DISTINCT` as a deduplication shortcut.
 - Avoid functions on partition or filter columns.
@@ -122,25 +120,29 @@ Useful slash commands:
 - Do not invent schemas or APIs.
 - Do not introduce new dependencies unless necessary.
 - Prefer additive and backward-compatible changes when production impact is possible.
+- Do not declare work done until the intended end-to-end flow has been implemented and validated with the most relevant safe checks, runs, or manual verification steps.
+- End-to-end validation does not justify destructive actions, production writes, large backfills, live-load tests, or anything that could break production assets or degrade other running workloads without explicit approval.
+- For risky flows, prefer staged, read-only, isolated, or non-production validation first.
 
 ## Work Style
 
 - Before changing code, inspect existing patterns.
 - Documentation first: before implementing a new integration, provider feature, external API, or unfamiliar tool, review the official documentation first and base the implementation on that source.
 - For unfamiliar codebases or non-trivial changes, follow the discovery and delivery sequence in `.claude/rules/engineering-workflow.md`.
-- Use Understand Anything for discovery, OpenSpec for non-trivial proposal work, LikeC4 for architecture expression, and Backstage for publication and operational visibility.
+- Use the repo's discovery, proposal, architecture, and publication tools in the intended sequence instead of skipping directly to implementation.
 - For risky changes, explain assumptions and impact.
 - Prefer review or checklist outputs before implementation.
 - When information is missing, state assumptions explicitly.
+- For implementation tasks, validate the full intended workflow before considering the task complete, but keep validation proportional to risk and safety constraints.
+- If full validation would require destructive actions, production intervention, approval-gated access, or could affect live systems, stop at the safe boundary and state exactly what remains unverified and why.
 - **Agent and skill routing is mandatory**: before executing any Data Engineering task, identify which agents (`.claude/agents/`) and skills (`.claude/skills/`) apply. Route each track to the appropriate specialist — do not generate SQL, DDL, backfill plans, data quality checks, or technical documentation directly when a skill or agent covers it. If multiple tracks are involved (e.g., design + backfill + data quality), spawn the corresponding agents in parallel.
 
 ## Architecture Notes
 
-- StarRocks is the primary modeling target in this workspace.
 - The expected medallion flow is `raw/landing -> refined/curated -> serving/consumption`.
 - Use bronze/silver/gold or equivalent layer names only as implementation details; keep design reasoning at the medallion-pattern level.
 - Reporting, logs, and audit datasets are downstream consumption artifacts, not the canonical curated model layer.
-- Local MCP usage is backed by `.mcp.json`; the local stack provides the `starrocks` and `airflow` endpoints.
+- Local MCP usage is backed by `.mcp.json`; the local stack provides the repo's service endpoints for exploration and validation.
 - Treat prod, backfills, and large-table changes as high-risk operations.
 
 ## Additional Documentation
@@ -156,9 +158,9 @@ Use progressive disclosure. Read deeper docs only when the task needs them.
 - `.claude/rules/data-quality-standards.md`
 - `.claude/rules/backfill-standards.md`
 - `.claude/rules/plane-integration.md`
-- `.claude/rules/likec4-guide.md` -> LikeC4 DSL conventions and CLI usage
-- `.claude/rules/openspec-guide.md` -> OpenSpec proposal workflow and templates
-- `.claude/rules/understand-anything-guide.md` -> Understand Anything commands and data engineering use cases
+- `.claude/rules/likec4-guide.md` -> architecture diagram conventions and CLI usage
+- `.claude/rules/openspec-guide.md` -> proposal workflow and templates
+- `.claude/rules/understand-anything-guide.md` -> codebase exploration commands and data engineering use cases
 - `.claude/README.md`
 - `README.md`
 - `local-stack/README.md`
