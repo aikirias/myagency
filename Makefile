@@ -8,12 +8,13 @@ help: ## Show available targets
 
 # ─── Prerequisites ────────────────────────────────────────────────────────────
 
-check-node: ## Verify Node.js >= 18 is available
+check-node: ## Verify Node.js >= 20 is available
 	@command -v node >/dev/null 2>&1 || \
-		(echo "ERROR: Node.js is required. https://nodejs.org" && exit 1)
+		(echo "ERROR: Node.js not found. Install via nvm: https://github.com/nvm-sh/nvm" && exit 1)
 	@node -e "const v = parseInt(process.versions.node); \
-		if (v < 18) { \
-			console.error('ERROR: Node.js >= 18 required, found: ' + process.version); \
+		if (v < 20) { \
+			console.error('ERROR: Node.js >= 20 required, found: ' + process.version); \
+			console.error('Run: nvm install 20 && nvm use 20'); \
 			process.exit(1); \
 		}"
 	@echo "Node.js $$(node --version) OK"
@@ -23,19 +24,18 @@ check-node: ## Verify Node.js >= 18 is available
 install: check-node install-likec4 install-openspec install-understand-anything ## Install all three tools
 	@echo ""
 	@echo "Installation complete."
-	@echo "  likec4    $$(likec4 --version 2>/dev/null || echo 'not in PATH')"
-	@echo "  openspec  $$(openspec --version 2>/dev/null || echo 'not in PATH')"
-	@echo "  understand-anything: see instructions above"
+	@echo "  likec4   $$(likec4 --version 2>/dev/null || echo 'not in PATH — check nvm is active')"
+	@echo "  openspec $$(openspec --version 2>/dev/null || echo 'not in PATH — check nvm is active')"
 
 # ─── LikeC4 ───────────────────────────────────────────────────────────────────
 
 install-likec4: check-node ## Install LikeC4 CLI (architecture-as-code diagrams)
-	npm install -g @likec4/cli
+	npm install -g likec4
 	@echo ""
 	@echo "LikeC4 installed."
 	@echo "  Verify : likec4 --version"
-	@echo "  Preview: likec4 serve <file.likec4>"
-	@echo "  Build  : likec4 build <file.likec4>"
+	@echo "  Preview: likec4 serve architecture/<file>.likec4"
+	@echo "  Build  : likec4 build architecture/<file>.likec4 --output docs/architecture/"
 	@echo "  Docs   : https://likec4.dev/docs"
 	@echo ""
 	@echo "Architecture files go in: architecture/"
@@ -53,17 +53,12 @@ install-openspec: check-node ## Install OpenSpec CLI (spec-driven development)
 
 # ─── Understand Anything ──────────────────────────────────────────────────────
 
-install-understand-anything: ## Install Understand Anything (Claude Code native plugin)
-	@echo "Understand Anything is a Claude Code native plugin."
+install-understand-anything: ## Install Understand Anything as a Claude Code native plugin
+	@echo "Understand Anything must be installed inside Claude Code."
 	@echo ""
-	@echo "Option 1 — Claude Code slash commands (recommended):"
-	@echo "  Open Claude Code, then run:"
-	@echo "    /plugin marketplace add Lum1104/Understand-Anything"
-	@echo "    /plugin install understand-anything"
+	@echo "Run these slash commands in Claude Code:"
+	@echo "  /plugin marketplace add Lum1104/Understand-Anything"
+	@echo "  /plugin install understand-anything"
 	@echo ""
-	@echo "Option 2 — Bash installer (Linux / macOS):"
-	@read -p "Run the bash installer? [y/N] " confirm && [ "$$confirm" = "y" ] && \
-		curl -fsSL https://raw.githubusercontent.com/Lum1104/Understand-Anything/main/install.sh | bash || \
-		echo "Skipped. Install manually: https://github.com/Lum1104/Understand-Anything"
-	@echo ""
-	@echo "After installing, run /understand in Claude Code to build the knowledge graph."
+	@echo "Then run /understand to build the knowledge graph for this repo."
+	@echo "Docs: https://github.com/Lum1104/Understand-Anything"

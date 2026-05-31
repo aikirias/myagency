@@ -5,7 +5,7 @@
 Understand Anything is a Claude Code native plugin that builds a knowledge graph from a codebase using Tree-sitter and LLM analysis. It exposes slash commands for exploration, impact analysis, and onboarding.
 
 - Repo: https://github.com/Lum1104/Understand-Anything
-- Install: `make install-understand-anything`
+- Install: run inside Claude Code → `/plugin marketplace add Lum1104/Understand-Anything` then `/plugin install understand-anything`
 
 ## Setup
 
