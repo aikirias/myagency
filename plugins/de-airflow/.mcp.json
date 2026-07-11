@@ -1,0 +1,14 @@
+{
+  "airflow": {
+    "command": "uvx",
+    "args": [
+      "astro-airflow-mcp"
+    ],
+    "env": {
+      "AIRFLOW_API_URL": "${AIRFLOW_API_URL}",
+      "AIRFLOW_USERNAME": "${AIRFLOW_USERNAME}",
+      "AIRFLOW_PASSWORD": "${AIRFLOW_PASSWORD}",
+      "AF_READ_ONLY": "${AF_READ_ONLY:-true}"
+    }
+  }
+}

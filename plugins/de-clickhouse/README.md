@@ -15,14 +15,16 @@ consulting-specific delta only.
 
 ## Per-project setup
 
-1. Install this pack: `/plugin install de-clickhouse@myagency --scope project`
-2. Install the vendor knowledge (maintained by ClickHouse Inc., do not duplicate it here):
+1. Add the vendor marketplace once:
 
    ```bash
-   claude plugin marketplace add ClickHouse/clickhouse-claude-code-plugin
-   # or the skills repo directly: https://github.com/ClickHouse/agent-skills
+   claude plugin marketplace add ClickHouse/agent-skills
    ```
 
+2. `/plugin install de-clickhouse@myagency --scope project` — this **auto-installs
+   `clickhouse-best-practices` and `clickhouse-architecture-advisor` from
+   `clickhouse-agent-skills`** (vendor-maintained) as declared dependencies. Their other
+   plugins (chdb, clickhousectl) are optional installs from the same marketplace.
 3. Set credentials in the project environment (never in files):
    `CLICKHOUSE_HOST`, `CLICKHOUSE_PORT`, `CLICKHOUSE_USER`, `CLICKHOUSE_PASSWORD`,
    `CLICKHOUSE_SECURE`. Request a **read-only user** from the client.

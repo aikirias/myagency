@@ -30,3 +30,10 @@ re-run, audit, and learn from without you in the room.
   a clearly separated section — visible, but not mixed with the delivered work.
 - The package must survive the channel: whatever the overlay says (repo, wiki, zip), the
   package is self-contained.
+
+## Reflect before closing
+
+Before considering the engagement done, run `method-field-capture`: did we hit a gotcha,
+failure pattern, or technique the toolkit didn't already carry? If so, capture it
+(generalized and de-identified) as a toolkit candidate — this is how the skills improve
+from real work rather than staying doc-derived.

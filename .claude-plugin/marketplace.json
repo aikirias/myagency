@@ -5,6 +5,11 @@
     "email": "alekwiek@gmail.com"
   },
   "description": "Personal data engineering consulting toolkit: core working method, deliverable contracts, and per-stack technology packs.",
+  "allowCrossMarketplaceDependenciesOn": [
+    "astronomer",
+    "aiguide",
+    "clickhouse-agent-skills"
+  ],
   "plugins": [
     {
       "name": "de-core",
@@ -23,6 +28,24 @@
       "source": "./plugins/de-starrocks",
       "description": "StarRocks stack pack (full): first-party idioms, diagnosis, and operations skills plus official MCP config. Install on StarRocks engagements.",
       "category": "stack"
+    },
+    {
+      "name": "de-airflow",
+      "source": "./plugins/de-airflow",
+      "description": "Airflow stack pack: Astronomer read-only MCP, vendor skill pointers, consulting gotchas, DAG safety hooks. Install on Airflow engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-postgres",
+      "source": "./plugins/de-postgres",
+      "description": "PostgreSQL stack pack: Postgres MCP Pro in restricted mode, pg-aiguide pointers, source-system consulting gotchas. Install on PostgreSQL engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "research",
+      "source": "./plugins/research",
+      "description": "General-purpose investigation method and RES-NNN record system: context-bound alternatives, annotated references, decisions with implementation tracking. Domain-agnostic.",
+      "category": "general"
     }
   ]
 }

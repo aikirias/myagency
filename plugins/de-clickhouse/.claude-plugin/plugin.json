@@ -2,6 +2,16 @@
   "name": "de-clickhouse",
   "description": "ClickHouse stack pack: official read-only MCP access, pointers to vendor-maintained skills, and consulting-specific gotchas integrated with the de-core method.",
   "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "clickhouse-best-practices",
+      "marketplace": "clickhouse-agent-skills"
+    },
+    {
+      "name": "clickhouse-architecture-advisor",
+      "marketplace": "clickhouse-agent-skills"
+    }
+  ],
   "author": {
     "name": "Aikirias",
     "email": "alekwiek@gmail.com"

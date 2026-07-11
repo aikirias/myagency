@@ -1,0 +1,15 @@
+{
+  "name": "de-postgres",
+  "description": "PostgreSQL stack pack: Postgres MCP Pro in enforced read-only mode, pointers to Timescale's pg-aiguide, and consulting gotchas for PG as a source system.",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "pg",
+      "marketplace": "aiguide"
+    }
+  ],
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

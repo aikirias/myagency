@@ -1,0 +1,15 @@
+{
+  "name": "de-airflow",
+  "description": "Airflow stack pack: Astronomer read-only MCP config, pointers to the vendor-maintained skill set, consulting gotchas, and DAG-file safety hooks.",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "astronomer-data",
+      "marketplace": "astronomer"
+    }
+  ],
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

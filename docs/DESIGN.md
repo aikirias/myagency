@@ -29,6 +29,7 @@ reusable, installable Claude Code plugins:
 | 6 | First deliverable contract | `broken-report-fix` | Serves as the pattern for the other contracts |
 | 7 | Commands directory | Not used — deprecated in favor of skills | Skills are the single entry point |
 | 8 | Stack packs are reuse-first | Survey existing community/vendor plugins, skills, and MCP servers per stack BEFORE authoring | Where good assets exist: reference/install them, and our pack ships only the consulting delta (gotchas, safety integration, contract hooks). Own content stays at the abstract level (medallion, idempotency, method) |
+| 9 | Vendor plugins as formal dependencies | Thin packs declare cross-marketplace `dependencies` in plugin.json (Claude Code v2.1.110+) | `de-airflow` → `astronomer-data@astronomer`; `de-postgres` → `pg@aiguide`; `de-clickhouse` → `clickhouse-best-practices` + `clickhouse-architecture-advisor` @ `clickhouse-agent-skills`. External marketplace names whitelisted via `allowCrossMarketplaceDependenciesOn`. One manual step remains per vendor: `claude plugin marketplace add <org/repo>` (dependencies cannot auto-add marketplaces) |
 
 ## Architecture
 
@@ -92,7 +93,9 @@ When porting material from the legacy branch, apply this filter:
 - [x] Decide distribution, granularity, language, naming
 - [x] Marketplace + `de-core` manifest scaffold
 - [x] Deliverable contract: `broken-report-fix` (v1 — see `plugins/de-core/skills/deliverable-broken-report-fix/`)
-- [x] Method skills: `method-discovery`, `method-diagnosis`, `method-safe-operations`, `method-delivery`
+- [x] Method skills: `method-discovery`, `method-diagnosis`, `method-safe-operations`,
+      `method-delivery`, `method-improvement-plan` (checkpointed plans + drift protocol),
+      `method-field-capture` (capture→promote loop that grows skills from field experience)
 - [x] Practices skills: sql-quality, idempotency-and-reruns, incremental-processing,
       data-quality-minimums, backfill-safety, data-modeling, observability-and-ownership,
       cost-optimization, pii-handling, architecture-selection (incl. OLTP/OLAP/engine-class),
@@ -108,14 +111,20 @@ When porting material from the legacy branch, apply this filter:
 - [x] First thin pack: `de-clickhouse` (draft — pending user review of consulting notes)
 - [x] First full pack: `de-starrocks` (idioms / diagnosis / operations, doc-verified — pending
       user review + testbed validation)
-- [ ] Remaining stack packs per the tier matrix in stack-packs.md
-- [ ] Client-project overlay template (`CLAUDE.md` snippet for client repos)
-- [ ] Move demo to `examples/`, retire legacy `.claude/` surface from `main`
-- [ ] Rewrite root `README.md` + install/usage docs
+- [x] Thin packs: `de-airflow` (incl. DAG hooks ported from legacy), `de-postgres`
+- [x] `research` plugin (domain-agnostic): `investigate` skill + RES-NNN record system with
+      implementation-tracking lifecycle
+- [ ] Remaining stack packs per the tier matrix in stack-packs.md: spark, flink, pulsar, mssql
+- [x] Client-project overlay template: `templates/client-project-overlay.md`
+- [x] Demo moved to `examples/` (local-stack, architecture, catalog-info, openspec); legacy
+      `.claude/` retired except hooks/ + settings.json (session-active — removed next session)
+- [x] Root `README.md` + `CLAUDE.md` rewritten for the marketplace; new `make validate`
+      (scripts/validate_marketplace.py) replaces the legacy structure validator
 - [ ] End-to-end test: install plugins into the testbed and run one deliverable per contract
 
 ## Pending cleanup
 
-The legacy `.claude/` directory is still present on `main` because its hooks are active in the
-current session and the content is still being mined. It is removed in the "retire legacy" roadmap
-step once `de-core` covers its useful parts.
+Only `.claude/hooks/` + `.claude/settings.json` remain from the legacy surface — their
+PreToolUse hooks are loaded in the working session, so deleting them mid-session breaks
+Write calls. Remove both (plus the note in `CLAUDE.md`) in a fresh session; de-core's
+plugin hooks replace them.

@@ -1,0 +1,9 @@
+{
+  "name": "research",
+  "description": "General-purpose investigation method and record system: context-bound research with alternatives, pros/cons, annotated references, explicit decisions, and implementation tracking (RES-NNN records).",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}
