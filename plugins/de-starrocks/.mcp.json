@@ -1,0 +1,17 @@
+{
+  "starrocks": {
+    "command": "uv",
+    "args": [
+      "run",
+      "--with",
+      "mcp-server-starrocks",
+      "mcp-server-starrocks"
+    ],
+    "env": {
+      "STARROCKS_HOST": "${STARROCKS_HOST}",
+      "STARROCKS_PORT": "${STARROCKS_PORT:-9030}",
+      "STARROCKS_USER": "${STARROCKS_USER}",
+      "STARROCKS_PASSWORD": "${STARROCKS_PASSWORD}"
+    }
+  }
+}
