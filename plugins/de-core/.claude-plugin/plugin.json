@@ -1,0 +1,9 @@
+{
+  "name": "de-core",
+  "description": "Core data engineering consulting toolkit: working method, engineering practices, and client deliverable contracts.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

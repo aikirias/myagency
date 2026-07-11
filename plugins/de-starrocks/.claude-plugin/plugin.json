@@ -1,0 +1,9 @@
+{
+  "name": "de-starrocks",
+  "description": "StarRocks stack pack (full): engine idioms, diagnosis playbook, and operations knowledge - no curated StarRocks pack exists in the ecosystem, this content is first-party. Ships the official MCP server config.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

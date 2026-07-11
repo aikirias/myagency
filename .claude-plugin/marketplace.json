@@ -1,0 +1,28 @@
+{
+  "name": "myagency",
+  "owner": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  },
+  "description": "Personal data engineering consulting toolkit: core working method, deliverable contracts, and per-stack technology packs.",
+  "plugins": [
+    {
+      "name": "de-core",
+      "source": "./plugins/de-core",
+      "description": "Core DE consulting toolkit: working method, engineering practices, and client deliverable contracts. Install in every engagement.",
+      "category": "core"
+    },
+    {
+      "name": "de-clickhouse",
+      "source": "./plugins/de-clickhouse",
+      "description": "ClickHouse stack pack: official read-only MCP, vendor skill pointers, consulting gotchas. Install on ClickHouse engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-starrocks",
+      "source": "./plugins/de-starrocks",
+      "description": "StarRocks stack pack (full): first-party idioms, diagnosis, and operations skills plus official MCP config. Install on StarRocks engagements.",
+      "category": "stack"
+    }
+  ]
+}
