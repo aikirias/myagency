@@ -43,11 +43,10 @@ Format: unchecked = pending. Add answers/notes directly under the item.
   (catalog threshold ~50-100 datasets: confirm it matches your experience).
   (added 2026-07-11)
 
-- [ ] **Commit checkpoint** — everything so far is uncommitted working tree on `main`
-  (legacy preserved on `legacy-scaffold`). Review the diff and say when to commit; suggested
-  message: `feat(marketplace): rebuild as plugin marketplace with de-core and stack packs`.
-  (added 2026-07-11)
-
 ## Answered / done
 
 <!-- move completed items here, keep the answer for traceability -->
+
+- [x] **Commit checkpoint** — pushed to `origin/main` on 2026-07-11 (`f46ae35` marketplace
+  rebuild + `ddb17a0` gitignore fix for plugin MCP configs); `legacy-scaffold` branch also
+  pushed to origin.
