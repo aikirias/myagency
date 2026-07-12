@@ -1,0 +1,9 @@
+{
+  "name": "de-flink",
+  "description": "Apache Flink stack pack (full): checkpointing and exactly-once honesty, watermarks and late data, state backends and TTL, backpressure and checkpoint diagnosis, savepoint-based operations and the 1.x to 2.x break. No curated Flink pack exists in the ecosystem.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

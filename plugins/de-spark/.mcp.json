@@ -1,0 +1,13 @@
+{
+  "spark-history": {
+    "command": "uvx",
+    "args": [
+      "--from",
+      "mcp-apache-spark-history-server",
+      "spark-mcp"
+    ],
+    "env": {
+      "SHS_SERVERS__DEFAULT__URL": "${SPARK_HISTORY_SERVER_URL}"
+    }
+  }
+}

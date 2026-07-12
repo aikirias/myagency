@@ -1,0 +1,9 @@
+{
+  "name": "de-spark",
+  "description": "Apache Spark (OSS) stack pack (full): idempotent writes and object-storage committers, AQE and skew, OOM taxonomy, streaming sink guarantees, operations and cost pitfalls. Databricks-specific knowledge is reused from the vendor, not duplicated here.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

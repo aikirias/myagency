@@ -1,0 +1,9 @@
+{
+  "name": "de-pulsar",
+  "description": "Apache Pulsar stack pack (full): first-party idioms, diagnosis, and operations skills - no curated Pulsar knowledge exists in the ecosystem. Retention/TTL/backlog semantics, subscription types, effectively-once, backlog forensics.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

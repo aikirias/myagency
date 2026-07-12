@@ -1,0 +1,9 @@
+{
+  "name": "de-mssql",
+  "description": "SQL Server stack pack (full): extraction and CDC idioms, diagnosis by symptom, and operations knowledge for MSSQL as a source system - no curated pack exists in the ecosystem. Official SQL MCP Server setup documented.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}
