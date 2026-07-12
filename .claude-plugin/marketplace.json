@@ -8,7 +8,13 @@
   "allowCrossMarketplaceDependenciesOn": [
     "astronomer",
     "aiguide",
-    "clickhouse-agent-skills"
+    "clickhouse-agent-skills",
+    "dbt-agent-marketplace",
+    "mongodb-plugins",
+    "elastic-agent-skills",
+    "redis",
+    "claude-plugins-official",
+    "databricks-agent-skills"
   ],
   "plugins": [
     {
@@ -39,6 +45,96 @@
       "name": "de-postgres",
       "source": "./plugins/de-postgres",
       "description": "PostgreSQL stack pack: Postgres MCP Pro in restricted mode, pg-aiguide pointers, source-system consulting gotchas. Install on PostgreSQL engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-spark",
+      "source": "./plugins/de-spark",
+      "description": "Apache Spark OSS stack pack (full): idempotent writes, object-storage committers, AQE/skew, OOM taxonomy, streaming guarantees, plus the read-only History Server MCP. Install on Spark engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-flink",
+      "source": "./plugins/de-flink",
+      "description": "Apache Flink stack pack (full): exactly-once honesty, watermarks/late data, state and savepoint discipline, backpressure and checkpoint diagnosis, 1.x to 2.x break. Install on Flink engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-pulsar",
+      "source": "./plugins/de-pulsar",
+      "description": "Apache Pulsar stack pack (full): first-party idioms, diagnosis, and operations skills - retention/TTL/quota semantics, subscription forensics, effectively-once. Install on Pulsar engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-mssql",
+      "source": "./plugins/de-mssql",
+      "description": "SQL Server stack pack (full): extraction/CDC idioms, diagnosis by symptom, operations for MSSQL as a source system. Install on SQL Server engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-kafka",
+      "source": "./plugins/de-kafka",
+      "description": "Apache Kafka stack pack (full): durability matrix, EOS reality, diagnosis by symptom, Kafka Connect and Debezium CDC consulting. Install on Kafka engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-snowflake",
+      "source": "./plugins/de-snowflake",
+      "description": "Snowflake stack pack (full): loading and CDC idioms, diagnosis by symptom, cost model and audit backbone. Install on Snowflake engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-lakehouse",
+      "source": "./plugins/de-lakehouse",
+      "description": "Lakehouse stack pack (full): Iceberg and Delta table discipline, Trino engine semantics, vendor-neutral format selection. Install on lakehouse engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-dbt",
+      "source": "./plugins/de-dbt",
+      "description": "dbt stack pack: dbt Labs official skills as a dependency, official dbt-mcp with safety posture, consulting gotchas for the transformation layer. Install on dbt engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-mysql",
+      "source": "./plugins/de-mysql",
+      "description": "MySQL stack pack: read-only-by-default MCP, PlanetScale official skill pointer, MySQL-as-CDC-source consulting delta. Install on MySQL engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-mongodb",
+      "source": "./plugins/de-mongodb",
+      "description": "MongoDB stack pack: official MongoDB plugin as a dependency, read-only MCP posture, change-stream CDC and extraction consulting delta. Install on MongoDB engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-elasticsearch",
+      "source": "./plugins/de-elasticsearch",
+      "description": "Elasticsearch/OpenSearch stack pack: Elastic official skills as a dependency, version-gated MCP routing, pipeline sink/source consulting delta. Install on ES/OpenSearch engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-redis",
+      "source": "./plugins/de-redis",
+      "description": "Redis stack pack: official Redis plugin as a dependency, official MCP with mandatory read-only ACL recipe, pipeline consulting delta. Install when Redis appears in an engagement.",
+      "category": "stack"
+    },
+    {
+      "name": "de-rabbitmq",
+      "source": "./plugins/de-rabbitmq",
+      "description": "RabbitMQ stack pack: read-only-by-default MCP guidance and consulting delta for queues feeding data pipelines. Install on RabbitMQ engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-bigquery",
+      "source": "./plugins/de-bigquery",
+      "description": "BigQuery stack pack: Google official skills as a dependency, enforced read-only + cost-capped MCP Toolbox config, bytes-scanned cost consulting delta. Install on BigQuery engagements.",
+      "category": "stack"
+    },
+    {
+      "name": "de-databricks",
+      "source": "./plugins/de-databricks",
+      "description": "Databricks stack pack: official Databricks plugin as a dependency, managed-MCP recipes, DBU cost and lock-in consulting delta. Install on Databricks engagements (with de-spark).",
       "category": "stack"
     },
     {

@@ -1,0 +1,15 @@
+{
+  "name": "de-bigquery",
+  "description": "BigQuery stack pack: Google's official skills as a dependency, MCP Toolbox with an enforced read-only + cost-capped tools.yaml, and the consulting delta - the bytes-scanned cost model and pruning traps.",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "bigquery-data-analytics",
+      "marketplace": "claude-plugins-official"
+    }
+  ],
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

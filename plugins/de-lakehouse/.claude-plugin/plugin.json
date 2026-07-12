@@ -1,0 +1,9 @@
+{
+  "name": "de-lakehouse",
+  "description": "Lakehouse stack pack (full): Apache Iceberg and Delta Lake table-format discipline, Trino engine tuning and semantics, and vendor-neutral format selection. First-party doc-verified content.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

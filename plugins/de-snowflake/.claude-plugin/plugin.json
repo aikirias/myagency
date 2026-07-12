@@ -1,0 +1,9 @@
+{
+  "name": "de-snowflake",
+  "description": "Snowflake stack pack (full): loading and CDC idioms, diagnosis by symptom, cost model and audit backbone. First-party doc-verified content.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

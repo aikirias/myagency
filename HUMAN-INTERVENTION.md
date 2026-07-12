@@ -73,6 +73,61 @@ things worth your attention when reviewing, so you never have to re-derive what 
   AND no scope/risk/safety change; 3 consecutive minor drifts escalate as major. This sets
   the balance between the plan nagging you and running away on its own; tune it here.
 
+- [ ] **Four new full packs: field review** — [de-spark](plugins/de-spark/),
+  [de-flink](plugins/de-flink/), [de-pulsar](plugins/de-pulsar/),
+  [de-mssql](plugins/de-mssql/), all doc-verified (Spark defaults checked against
+  SQLConf source; Pulsar against 4.0 broker.conf; Flink against 1.20/2.3 doc source;
+  MSSQL against learn.microsoft.com). (added 2026-07-11)
+  **Review focus:** per pack, the ONE claim that drives real engagements — Spark: the
+  documented "dynamic partition overwrite + S3A committers unsupported" trap; Flink:
+  "1.x→2.x state compatibility NOT guaranteed" (migration, not upgrade); Pulsar:
+  retention=0 / quota=unlimited / subs-never-expire defaults tree; MSSQL: the CDC
+  log-truncation trap (stopped capture job = unbounded log even in simple recovery).
+  Confirm these match your field experience and add your own gotchas.
+
+- [ ] **Test suite review** — [tests/TESTPLAN.md](tests/TESTPLAN.md): 38 scenario cases
+  (install 5, methods 6, practices 8, deliverables e2e 3, hooks 4, research 4, stack
+  packs 8) + fixtures with planted defects. Execution deferred until you approve the
+  suite. (added 2026-07-11)
+  **Review focus:** (1) coverage — is anything you care about untested? (2) the Expected
+  checklists of TC-20/21/22 (the deliverable e2e cases) — they encode what "the system
+  works" means; (3) the run protocol (fresh session per case, sandbox outside the repo).
+
+- [ ] **Wave-2 packs (11): field review** — surveyed AND built on your go-ahead
+  (2026-07-12). Verdict matrix in [docs/stack-packs.md](docs/stack-packs.md).
+  Thin (8, vendor deps + consulting delta): [de-dbt](plugins/de-dbt/),
+  [de-mysql](plugins/de-mysql/), [de-mongodb](plugins/de-mongodb/),
+  [de-elasticsearch](plugins/de-elasticsearch/), [de-redis](plugins/de-redis/),
+  [de-rabbitmq](plugins/de-rabbitmq/), [de-bigquery](plugins/de-bigquery/),
+  [de-databricks](plugins/de-databricks/). Full (3, doc-verified):
+  [de-kafka](plugins/de-kafka/) (Kafka 4.x + Debezium 3.6),
+  [de-snowflake](plugins/de-snowflake/), [de-lakehouse](plugins/de-lakehouse/)
+  (Iceberg 1.11 + Delta OSS + Trino 482, ONE combined pack). Marketplace now 21
+  plugins, `make validate` green. Test cases TC-39..47 added. (added 2026-07-12)
+  **Review focus:** per full pack, the ONE claim that drives engagements — Kafka:
+  min.insync.replicas=1 default makes acks=all leader-only (the false-comfort matrix)
+  and offsets expire in 7 days; Snowflake: tasks auto-suspend after 10 failures and
+  streams go stale at 14 days (the silent CDC killers); Lakehouse: VACUUM/expiration
+  vs time-travel as ONE dial + DV/protocol one-way doors. Plus two judgment calls:
+  (1) `de-lakehouse` combined instead of per-tech packs; (2) de-mysql does NOT
+  formally depend on the PlanetScale plugin (its hosted MCP is PlanetScale-cloud-only)
+  — skill pulled via `npx skills add` instead. Veto or confirm.
+
+- [ ] **Client onboarding skill review** — new de-core skill
+  [method-client-onboarding](plugins/de-core/skills/method-client-onboarding/SKILL.md):
+  repo inspection first, then problem/scope interview (must-do / can-do / out-of-scope,
+  deliverable mapped to a contract, verifiable acceptance criteria), a scope APPROVAL
+  GATE before technical work, then generates the overlay from its
+  [canonical template](plugins/de-core/skills/method-client-onboarding/templates/overlay-template.md)
+  (moved into the skill so it ships to client repos; root `templates/` is now a
+  pointer) + day-one access list from pack READMEs. Test case TC-48 added.
+  (added 2026-07-12)
+  **Review focus:** (1) the scope gate — is "no technical work before scope approval"
+  how you actually want to operate, or too rigid for quick fixes? (2) the must-do /
+  can-do / out-of-scope split and the "can-do never displaces a must-do without
+  re-agreement" rule; (3) the overlay's new Engagement scope section — fields you'd
+  add or drop.
+
 - [ ] **Commit checkpoint** — uncommitted on top of what's pushed: research plugin,
   method-improvement-plan, method-field-capture, cross-marketplace dependencies, ClickHouse
   gotcha promotions, and the REPO CLOSURE (demo moved to `examples/`, legacy `.claude/`

@@ -1,0 +1,15 @@
+{
+  "name": "de-mongodb",
+  "description": "MongoDB stack pack: official MongoDB plugin as a dependency, read-only MCP posture, and the consulting delta - change-stream CDC, extraction consistency, and sharded-cluster pitfalls.",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "mongodb",
+      "marketplace": "mongodb-plugins"
+    }
+  ],
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

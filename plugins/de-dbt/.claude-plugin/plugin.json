@@ -1,0 +1,15 @@
+{
+  "name": "de-dbt",
+  "description": "dbt stack pack: dbt Labs official skills as a dependency, official dbt-mcp with engagement-shaped safety posture, and consulting gotchas for the transformation layer.",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "dbt",
+      "marketplace": "dbt-agent-marketplace"
+    }
+  ],
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

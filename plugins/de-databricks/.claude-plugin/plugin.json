@@ -1,0 +1,15 @@
+{
+  "name": "de-databricks",
+  "description": "Databricks stack pack: the official 28-skill Databricks plugin as a dependency, managed-MCP connection recipes, and the consulting delta - DBU cost model, Unity Catalog migration judgment, and DBR vs OSS lock-in review.",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "databricks",
+      "marketplace": "databricks-agent-skills"
+    }
+  ],
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

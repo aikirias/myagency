@@ -1,0 +1,43 @@
+# Read-only + cost-capped BigQuery source for MCP Toolbox (googleapis/mcp-toolbox).
+# The --prebuilt bigquery config has NO read-only switch - this file is the enforced
+# consulting posture. Invocation:
+#   toolbox --tools-file /path/to/this/tools.yaml --stdio
+sources:
+  bigquery-ro:
+    kind: bigquery
+    project: ${BIGQUERY_PROJECT}
+    location: ${BIGQUERY_LOCATION}
+    # SELECT-only for execute_sql; also blocks EXECUTE IMMEDIATE / CREATE PROCEDURE
+    # when allowedDatasets is set.
+    writeMode: blocked
+    # Uncomment and scope per engagement:
+    # allowedDatasets:
+    #   - my_dataset
+tools:
+  execute_sql:
+    kind: bigquery-execute-sql
+    source: bigquery-ro
+    description: Run a SELECT-only BigQuery query (writeMode blocked).
+  get_dataset_info:
+    kind: bigquery-get-dataset-info
+    source: bigquery-ro
+    description: Dataset metadata.
+  get_table_info:
+    kind: bigquery-get-table-info
+    source: bigquery-ro
+    description: Table metadata (schema, partitioning, clustering).
+  list_dataset_ids:
+    kind: bigquery-list-dataset-ids
+    source: bigquery-ro
+    description: List datasets in the project.
+  list_table_ids:
+    kind: bigquery-list-table-ids
+    source: bigquery-ro
+    description: List tables in a dataset.
+toolsets:
+  bigquery-readonly:
+    - execute_sql
+    - get_dataset_info
+    - get_table_info
+    - list_dataset_ids
+    - list_table_ids

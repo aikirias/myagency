@@ -1,0 +1,16 @@
+# Read-only tool allowlist for mcp-confluent (--allow-tools-file).
+# PIN THIS LIST against the installed server version before first client use:
+#   npx @confluentinc/mcp-confluent --config config.yaml --list-tools
+# Keep only list/describe/read tools; anything that creates, alters, deletes,
+# or produces stays OUT. Names below follow the v1.x naming - verify.
+list-topics
+describe-topic
+list-consumer-groups
+describe-consumer-group
+consume-messages
+list-connectors
+describe-connector
+list-schemas
+get-schema
+list-flink-statements
+describe-flink-statement

@@ -93,6 +93,14 @@ Anti-patterns (audit findings, dimension: architecture):
 Medallion is a *responsibility* pattern, not a batch pattern — in streaming topologies the
 same three responsibilities apply (raw stream → conformed stream/table → serving views).
 
+**Layer-naming house rule (set 2026-07-12).** Medallion terms (bronze/silver/gold ≙
+raw/curated/serving) are the CONCEPTUAL vocabulary — use them in design notes, audits,
+and client conversations. Physical dataset/schema/folder naming follows the repo's
+transformation-tool ecosystem convention (in dbt projects: `staging` ≙ raw→curated
+conformance edge, `intermediate` ≙ curated, `marts` ≙ serving). This equivalence is
+declared HERE once; the client overlay states which naming the repo uses. Never mix both
+vocabularies within one artifact.
+
 ## Decision 4 — History strategy
 
 Work through these questions IN ORDER; stop at the first match. The strategy table lives
@@ -120,6 +128,12 @@ joins), every backfill (rewriting history windows), and every correction (what d
 "fixing" a historical row mean?). Snapshots cost storage but almost no complexity. The
 rule: **no SCD2 without a named, real point-in-time question** — "we might need it" is
 not a consumer need.
+
+**SCD2 implementation house rule (set 2026-07-12).** Once SCD2 is justified: where dbt
+is in the stack, implement it as **dbt snapshots** (strategy caveats live in the dbt
+stack pack); where it is not, use the platform-native change-tracking mechanism of the
+stack pack in play. Deviating from this default is a documented decision in the design
+note, not a per-pipeline preference.
 
 ## Decision 5 — Processing cadence
 

@@ -1,0 +1,9 @@
+{
+  "name": "de-rabbitmq",
+  "description": "RabbitMQ stack pack: read-only-by-default MCP and the consulting delta for queues feeding data pipelines - quorum migration, memory alarms, DLX discipline, streams vs queues.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

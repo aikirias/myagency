@@ -1,0 +1,15 @@
+{
+  "name": "de-redis",
+  "description": "Redis stack pack: official Redis plugin as a dependency, official MCP with a mandatory read-only ACL recipe, and the consulting delta - Redis in pipelines as cache, dedup store, and the anti-patterns around it.",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "redis-development",
+      "marketplace": "redis"
+    }
+  ],
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

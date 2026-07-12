@@ -1,0 +1,15 @@
+{
+  "name": "de-elasticsearch",
+  "description": "Elasticsearch/OpenSearch stack pack: Elastic official skills as a dependency, version-gated MCP routing, and the consulting delta - source/sink pipeline gotchas and the ES/OpenSearch divergence map.",
+  "version": "0.1.0",
+  "dependencies": [
+    {
+      "name": "elastic-elasticsearch",
+      "marketplace": "elastic-agent-skills"
+    }
+  ],
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

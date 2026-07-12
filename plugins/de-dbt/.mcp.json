@@ -1,0 +1,14 @@
+{
+  "dbt": {
+    "command": "uvx",
+    "args": [
+      "dbt-mcp"
+    ],
+    "env": {
+      "DBT_PROJECT_DIR": "${DBT_PROJECT_DIR}",
+      "DBT_PATH": "${DBT_PATH}",
+      "DISABLE_SQL": "true",
+      "DISABLE_ADMIN_API": "true"
+    }
+  }
+}

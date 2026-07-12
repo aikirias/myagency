@@ -1,0 +1,9 @@
+{
+  "name": "de-kafka",
+  "description": "Apache Kafka stack pack (full): durability and EOS reality, consumer semantics, diagnosis by symptom, Kafka Connect and Debezium CDC consulting. First-party doc-verified content (Kafka 4.x, Debezium 3.6).",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

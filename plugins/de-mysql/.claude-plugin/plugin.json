@@ -1,0 +1,9 @@
+{
+  "name": "de-mysql",
+  "description": "MySQL stack pack: read-only-by-default MCP, pointer to PlanetScale's official MySQL skill, and the consulting delta nobody else covers - MySQL as a CDC/extraction source.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Aikirias",
+    "email": "alekwiek@gmail.com"
+  }
+}

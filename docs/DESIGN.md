@@ -30,6 +30,8 @@ reusable, installable Claude Code plugins:
 | 7 | Commands directory | Not used — deprecated in favor of skills | Skills are the single entry point |
 | 8 | Stack packs are reuse-first | Survey existing community/vendor plugins, skills, and MCP servers per stack BEFORE authoring | Where good assets exist: reference/install them, and our pack ships only the consulting delta (gotchas, safety integration, contract hooks). Own content stays at the abstract level (medallion, idempotency, method) |
 | 9 | Vendor plugins as formal dependencies | Thin packs declare cross-marketplace `dependencies` in plugin.json (Claude Code v2.1.110+) | `de-airflow` → `astronomer-data@astronomer`; `de-postgres` → `pg@aiguide`; `de-clickhouse` → `clickhouse-best-practices` + `clickhouse-architecture-advisor` @ `clickhouse-agent-skills`. External marketplace names whitelisted via `allowCrossMarketplaceDependenciesOn`. One manual step remains per vendor: `claude plugin marketplace add <org/repo>` (dependencies cannot auto-add marketplaces) |
+| 10 | Layer-naming convention | Medallion = conceptual vocabulary (design notes, audits); physical naming follows the transformation tool's ecosystem (dbt: staging/intermediate/marts) | Equivalence declared once in `practice-architecture-selection` (Decision 3); client overlay states which naming the repo uses; never mix within one artifact. User-approved 2026-07-12 |
+| 11 | SCD2 implementation default | dbt snapshots where dbt is in the stack; platform-native change tracking otherwise | Selection rule ("no SCD2 without a named point-in-time query") unchanged — this fixes the HOW. Deviations are documented design-note decisions. User-approved 2026-07-12 |
 
 ## Architecture
 
@@ -46,14 +48,12 @@ myagency/                          # marketplace repo (this repo)
 │   │   │   └── deliverable-*/     # output contracts per engagement type
 │   │   ├── agents/                # slim role definitions (judgment, not personas)
 │   │   └── hooks/                 # safety hooks (SQL/DDL/py validation)
-│   ├── de-airflow/
-│   ├── de-starrocks/
-│   ├── de-clickhouse/
-│   ├── de-spark/
-│   ├── de-flink/
-│   ├── de-pulsar/
-│   ├── de-postgres/
-│   └── de-mssql/
+│   ├── de-airflow/ de-starrocks/ de-clickhouse/ de-postgres/   # wave 1
+│   ├── de-spark/ de-flink/ de-pulsar/ de-mssql/                # wave 1 full
+│   ├── de-kafka/ de-snowflake/ de-lakehouse/                   # wave 2 full
+│   ├── de-dbt/ de-mysql/ de-mongodb/ de-elasticsearch/         # wave 2 thin
+│   ├── de-redis/ de-rabbitmq/ de-bigquery/ de-databricks/      # wave 2 thin
+│   └── research/                                               # domain-agnostic
 ├── examples/                      # testbed (ex local-stack demo), NOT part of the product
 └── docs/                          # this design doc + usage docs
 ```
@@ -114,13 +114,26 @@ When porting material from the legacy branch, apply this filter:
 - [x] Thin packs: `de-airflow` (incl. DAG hooks ported from legacy), `de-postgres`
 - [x] `research` plugin (domain-agnostic): `investigate` skill + RES-NNN record system with
       implementation-tracking lifecycle
-- [ ] Remaining stack packs per the tier matrix in stack-packs.md: spark, flink, pulsar, mssql
-- [x] Client-project overlay template: `templates/client-project-overlay.md`
+- [x] Remaining stack packs (full tier, doc-verified research per pack): `de-spark`,
+      `de-flink`, `de-pulsar`, `de-mssql` — pending user field review
+- [x] Wave-2 stack packs (surveyed and built 2026-07-12): thin — `de-dbt`, `de-mysql`,
+      `de-mongodb`, `de-elasticsearch`, `de-redis`, `de-rabbitmq`, `de-bigquery`,
+      `de-databricks` (vendor deps + consulting delta); full, doc-verified — `de-kafka`
+      (+Connect/Debezium), `de-snowflake`, `de-lakehouse` (Iceberg+Delta+Trino
+      combined) — pending user field review
+- [x] Test suite prepared: `tests/TESTPLAN.md` + 47 cases across 7 areas + fixtures
+      (execution deferred until suite approved; TC-39..47 cover wave-2 packs)
+- [x] Client-project overlay template — canonical copy now ships inside
+      `method-client-onboarding` (root `templates/` file is a pointer)
+- [x] `method-client-onboarding` (de-core): repo inspection → problem/scope interview
+      (must-do / can-do / out-of-scope + deliverable + acceptance criteria, approval
+      gate) → generated overlay + day-one access list (added 2026-07-12)
 - [x] Demo moved to `examples/` (local-stack, architecture, catalog-info, openspec); legacy
       `.claude/` retired except hooks/ + settings.json (session-active — removed next session)
 - [x] Root `README.md` + `CLAUDE.md` rewritten for the marketplace; new `make validate`
       (scripts/validate_marketplace.py) replaces the legacy structure validator
-- [ ] End-to-end test: install plugins into the testbed and run one deliverable per contract
+- [ ] Execute the test suite (tests/TESTPLAN.md) — install/unit/integration, one case per
+      fresh session; failures feed back as skill fixes or HUMAN-INTERVENTION items
 
 ## Pending cleanup
 
